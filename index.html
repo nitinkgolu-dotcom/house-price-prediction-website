@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Haven | House Price Prediction</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#172a3a;--muted:#6c7b88;--teal:#147d76;--mint:#eaf5f1;--line:#e5ece9;--paper:#fbfcfa}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font-family:'DM Sans',sans-serif}
+header{height:76px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 max(6vw,24px);background:#fff}
+.brand{font:800 22px Manrope,sans-serif;letter-spacing:-1px}.brand span{color:var(--teal)}.tag{font-size:13px;color:var(--muted)}
+.hero{padding:58px 24px 36px;text-align:center;background:linear-gradient(180deg,#f0f7f3 0%,var(--paper) 100%)}
+.eyebrow{color:var(--teal);font-weight:700;font-size:12px;letter-spacing:2px;text-transform:uppercase}
+h1{font:800 clamp(32px,5vw,52px)/1.12 Manrope,sans-serif;letter-spacing:-2px;margin:14px 0}
+.hero p{color:var(--muted);max-width:620px;margin:0 auto;line-height:1.7;font-size:15px}
+.wrap{width:min(1050px,92%);margin:0 auto 70px}
+.layout{display:grid;grid-template-columns:1.1fr .9fr;gap:22px;align-items:start}
+.card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:28px;box-shadow:0 12px 35px #193b2b0a}
+.card h2{font:700 20px Manrope,sans-serif;margin:0 0 7px}.sub{font-size:13px;color:var(--muted);margin:0 0 24px}
+.fields{display:grid;grid-template-columns:1fr 1fr;gap:17px}
+label{display:block;font-size:13px;font-weight:700;margin-bottom:8px}
+input{width:100%;border:1px solid #dce6e1;border-radius:10px;padding:13px 12px;font:500 14px 'DM Sans';outline:none;background:#fcfdfc}
+input:focus{border-color:var(--teal);box-shadow:0 0 0 3px #147d7618}
+.hint{font-size:11px;color:#8a979e;margin-top:6px}
+.full{grid-column:1/-1}.btn{border:0;border-radius:10px;background:var(--teal);color:white;font-weight:700;font-size:14px;padding:15px;cursor:pointer;width:100%;margin-top:22px;transition:.2s}
+.btn:hover{background:#0e655f;transform:translateY(-1px)}
+.result{background:#173b3b;color:#fff;border-radius:16px;padding:25px;margin-bottom:18px;min-height:190px}
+.result .small{font-size:12px;color:#b8d7d0;letter-spacing:1px;text-transform:uppercase;font-weight:700}
+.amount{font:800 clamp(29px,4vw,40px) Manrope,sans-serif;margin:13px 0 8px;letter-spacing:-1px;overflow-wrap:anywhere}
+.result p{color:#c5dcd6;font-size:12px;line-height:1.6;margin:0}
+.placeholder{background:var(--mint);color:#315c56;border-radius:16px;padding:24px;margin-bottom:18px}
+.placeholder strong{display:block;font:700 17px Manrope;margin-bottom:8px}.placeholder p{font-size:13px;line-height:1.6;margin:0;color:#58746e}
+.note{font-size:12px;color:var(--muted);line-height:1.6}
+.error{background:#fff0ee;color:#a13c31;padding:12px;border-radius:9px;font-size:13px;margin-bottom:15px}
+.metrics{margin-top:22px}.metrics h2{margin-bottom:5px}.table-wrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:13px;margin-top:15px}th,td{text-align:left;padding:13px 10px;border-bottom:1px solid var(--line);white-space:nowrap}th{color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.6px}td:first-child{font-weight:700}
+footer{text-align:center;color:#8b9894;font-size:12px;padding:25px;border-top:1px solid var(--line)}
+@media(max-width:760px){.layout{grid-template-columns:1fr}.hero{padding-top:42px}.card{padding:21px}.tag{display:none}}
+@media(max-width:430px){.fields{grid-template-columns:1fr}.full{grid-column:auto}}
+</style>
+</head>
+<body>
+<header><div class="brand">haven<span>.</span></div><div class="tag">HOUSE PRICE PREDICTION · MACHINE LEARNING</div></header>
+<section class="hero">
+ <div class="eyebrow">Smart property insights</div>
+ <h1>Find the value of your<br>next home.</h1>
+ <p>Enter a few details about the area and property. Our Linear Regression model will estimate the house price using the project dataset.</p>
+</section>
+<main class="wrap">
+ <div class="layout">
+  <section class="card">
+   <h2>Property details</h2><p class="sub">Fill in all five details to generate an estimate.</p>
+   {% if error %}<div class="error">{{ error }}</div>{% endif %}
+   <form method="POST">
+    <div class="fields">
+     <div><label for="income">Average area income</label><input id="income" name="income" type="number" min="0" step="any" placeholder="e.g. 79545" value="{{ values.get('income','') }}" required><div class="hint">Average income in the area</div></div>
+     <div><label for="house_age">Average house age</label><input id="house_age" name="house_age" type="number" min="0" step="any" placeholder="e.g. 5.6" value="{{ values.get('house_age','') }}" required><div class="hint">Age in years</div></div>
+     <div><label for="rooms">Average number of rooms</label><input id="rooms" name="rooms" type="number" min="0" step="any" placeholder="e.g. 6.2" value="{{ values.get('rooms','') }}" required><div class="hint">Average rooms per house</div></div>
+     <div><label for="bedrooms">Average number of bedrooms</label><input id="bedrooms" name="bedrooms" type="number" min="0" step="any" placeholder="e.g. 3" value="{{ values.get('bedrooms','') }}" required><div class="hint">Average bedrooms per house</div></div>
+     <div class="full"><label for="population">Area population</label><input id="population" name="population" type="number" min="0" step="any" placeholder="e.g. 23000" value="{{ values.get('population','') }}" required><div class="hint">Population of the area</div></div>
+    </div>
+    <button class="btn" type="submit">Calculate estimated price &nbsp; →</button>
+   </form>
+  </section>
+  <aside>
+   {% if prediction is not none %}
+   <div class="result"><div class="small">Your estimated house price</div><div class="amount">₹ {{ "{:,.2f}".format(prediction) }}</div><p>Generated by the trained Linear Regression model. This is an estimate, not a guaranteed market price.</p></div>
+   {% else %}
+   <div class="placeholder"><strong>Your estimate will appear here</strong><p>Complete the property form and select “Calculate estimated price” to see the model's prediction.</p></div>
+   {% endif %}
+   <div class="card"><h2>How it works</h2><p class="note">The project removes the Address column, separates the Price target from five input features, and uses an 80/20 train-test split. Linear Regression is used for the displayed prediction.</p><p class="note"><b>Dataset records:</b> {{ "{:,}".format(rows) }} rows loaded from Housing.csv.</p></div>
+  </aside>
+ </div>
+ <section class="card metrics">
+  <h2>Model performance</h2><p class="sub">Evaluation on the project's held-out test set.</p>
+  <div class="table-wrap"><table><thead><tr><th>Model</th><th>MAE</th><th>RMSE</th><th>R² score</th></tr></thead><tbody>
+  {% for name, m in metrics.items() %}<tr><td>{{ name }}</td><td>{{ "{:,.2f}".format(m.mae) }}</td><td>{{ "{:,.2f}".format(m.rmse) }}</td><td>{{ "%.4f"|format(m.r2) }}</td></tr>{% endfor %}
+  </tbody></table></div>
+  <p class="note">MAE and RMSE are prediction-error measures; a higher R² generally indicates a better fit. Metrics are calculated from your Housing.csv dataset when the app starts.</p>
+ </section>
+</main>
+<footer>HAVEN · House Price Prediction Project · Built with Python, Flask & Scikit-learn</footer>
+</body></html>
